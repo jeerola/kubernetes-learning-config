@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- deployment.yaml
+- service.yaml
+- statefulset.yaml
+- postgres-service.yaml
+images:
+- name: eerola/todo-backend
+  newName: eerola/todo-backend
+  newTag: 5f08c56d7040d6c9c06b88b5e523b4c390dc0268

@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-backend
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+    spec:
+      containers:
+      - name: todo-backend
+        image: eerola/todo-backend:4.6.1
+
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+        livenessProbe:
+          httpGet:
+            path: /livez
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "48Mi"
+          limits:
+            cpu: "100m"
+            memory: "128Mi"
+        imagePullPolicy: Always
+
+        env:
+          - name: PORT
+            value: "3000"
+          - name: POSTGRES_HOST
+            value: "postgres-stset"
+          - name: POSTGRES_PORT
+            value: "5432"
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgre-secrets
+                key: POSTGRES_PASSWORD
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                name: postgre-secrets
+                key: POSTGRES_DB
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgre-secrets
+                key: POSTGRES_USER
