@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: staging
+
+resources:
+- namespace.yaml
+- project-persistentvolume.yaml
+- project-persistentvolumeclaim.yaml
+- ../../project/base
+- ../../todo-backend/base
+- ../../todo-fetcher/base
+- ../../broadcaster/base
+
+images:
+- name: eerola/broadcaster
+  newName: eerola/broadcaster
+  newTag: f0e12d7cb3ae9c3b2de3ea7e89ce3294ab2e197c
+- name: eerola/todo-app
+  newName: eerola/todo-app
+  newTag: f0e12d7cb3ae9c3b2de3ea7e89ce3294ab2e197c
+- name: eerola/todo-backend
+  newName: eerola/todo-backend
+  newTag: f0e12d7cb3ae9c3b2de3ea7e89ce3294ab2e197c
+- name: eerola/todo-fetcher
+  newName: eerola/todo-fetcher
+  newTag: f0e12d7cb3ae9c3b2de3ea7e89ce3294ab2e197c
+
+patches:
+- patch: |-
+    - op: add
+      path: /spec/rules/0/host
+      value: staging.localhost
+  target:
+    kind: Ingress
+    name: project-ingress
