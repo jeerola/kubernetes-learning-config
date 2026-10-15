@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/jeerola/kubernetes-learning
+    repoURL: https://github.com/jeerola/kubernetes-learning-config
     targetRevision: main
     path: environments/production
   destination:
